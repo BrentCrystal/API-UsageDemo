@@ -1,5 +1,6 @@
 ﻿using DemoLibrary;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace ConsoleApp
@@ -12,14 +13,25 @@ namespace ConsoleApp
 
             try
             {
-                var person = PeopleProcessor.LoadPerson(32).Result;
+                var person = PeopleProcessor.LoadPerson(1).Result;
 
                 Type t = person.GetType();
-                PropertyInfo[] pi = t.GetProperties();
+                PropertyInfo[] properties = t.GetProperties();
 
-                foreach (PropertyInfo p in pi)
+                foreach (PropertyInfo p in properties)
                 {
-                    Console.WriteLine(p.Name + " : " + p.GetValue(person));
+                    if (p.PropertyType.IsArray )
+                    {
+                        Array a = (Array)p.GetValue(person);
+                        for (int i = 0; i < a.Length; i++)
+                        {
+                            Console.WriteLine(p.Name + " : " + a.GetValue(i));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(p.Name + " : " + p.GetValue(person));
+                    }
                 }
                 
             }
