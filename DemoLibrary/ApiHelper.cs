@@ -18,5 +18,4 @@ namespace DemoLibrary
             ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
     }
-
 }

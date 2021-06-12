@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
@@ -11,52 +12,39 @@ namespace ConsoleApp
         {
             ApiHelper.InitializeClient();
 
-            PersonModel person = new PersonModel();
+            bool isPersonId = true;
 
-            int personId = "Enter an Id number to return Star Wars character data:".GetPersonId();
-
-            try
+            do
             {
-                person = GetPersonData(personId);
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Person not found");
-            }
+                (int id, string quit ) userInput = "Enter Id number for Star Wars Character or Exit to Quit:".GetPersonIdOrQuit();
 
-            Console.WriteLine();
-            PrintPersonData(person);
-
-            Console.ReadLine();
-        }
-
-        private static void PrintPersonData(PersonModel person)
-        {
-            Type t = person.GetType();
-            PropertyInfo[] properties = t.GetProperties();
-
-            foreach (PropertyInfo p in properties)
-            {
-                if (p.PropertyType.IsArray)
+                if (userInput.quit =="exit")
                 {
-                    Array a = (Array)p.GetValue(person);
-                    for (int i = 0; i < a.Length; i++)
-                    {
-                        Console.WriteLine(p.Name + " : " + a.GetValue(i));
-                    }
+                    isPersonId = false;
                 }
                 else
                 {
-                    Console.WriteLine(p.Name + " : " + p.GetValue(person));
+                    try
+                    {
+                        var person = GetOrCreateCache(userInput.id).Result;
+                        person.PrintPerson();
+                        Console.WriteLine();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Person not found");
+                        Console.WriteLine();
+                    }
                 }
-            }
+                                
+            } while (isPersonId);
         }
 
-        private static PersonModel GetPersonData(int personId)
+        public static async Task<PersonModel> GetOrCreateCache(int personId)
         {
-            var person = PeopleProcessor.LoadPerson(personId).Result;
-
+            var peopleCache = new MemoryCache<PersonModel>();
+            var person = await peopleCache.GetOrCreate(personId, async() => await PeopleProcessor.LoadPerson(personId));
+          
             return person;
         }
     }
