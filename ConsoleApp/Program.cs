@@ -1,7 +1,5 @@
 ﻿using DemoLibrary;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ConsoleApp
@@ -40,11 +38,10 @@ namespace ConsoleApp
             } while (isPersonId);
         }
 
-        public static async Task<PersonModel> GetOrCreateCache(int personId)
+        private static async Task<PersonModel> GetOrCreateCache(int personId)
         {
-            var peopleCache = new MemoryCache<PersonModel>();
-            var person = await peopleCache.GetOrCreate(personId, async () => await PeopleProcessor.LoadPerson(personId));
-          
+            var person = await CacheHelper<PersonModel>.GetOrCreate(personId,
+                                                                    async () => await PeopleProcessor.LoadPerson(personId));
             return person;
         }
     }

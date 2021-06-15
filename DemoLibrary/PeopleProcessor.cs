@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DemoLibrary
@@ -35,9 +32,6 @@ namespace DemoLibrary
                     throw new Exception(response.ReasonPhrase);
                 }
             }
-
         }
-
-        
     }
 }
