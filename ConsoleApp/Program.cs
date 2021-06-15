@@ -43,7 +43,7 @@ namespace ConsoleApp
         public static async Task<PersonModel> GetOrCreateCache(int personId)
         {
             var peopleCache = new MemoryCache<PersonModel>();
-            var person = await peopleCache.GetOrCreate(personId, async() => await PeopleProcessor.LoadPerson(personId));
+            var person = await peopleCache.GetOrCreate(personId, async () => await PeopleProcessor.LoadPerson(personId));
           
             return person;
         }
