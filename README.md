@@ -1,2 +1,2 @@
 # API-UsageDemo
-Lookup people  in the Star Wars API based upon their ID number.
+Lookup characters in the Star Wars API using their ID number.
